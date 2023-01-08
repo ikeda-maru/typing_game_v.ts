@@ -59,10 +59,11 @@ var gameOver = function (id) { };
 // カウントダウンタイマー
 var timer = function () {
     // タイマー部分のHTML要素(p要素)を取得する
+    // let time = count.textContent;
     var time = count.textContent;
     var id = setInterval(function () {
         // カウントダウンする
-        // time--;
+        time--;
         count.textContent = time;
         // カウントが0になったらタイマーを停止する
         if (time <= 0) {
