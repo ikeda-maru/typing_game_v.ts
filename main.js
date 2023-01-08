@@ -4,6 +4,9 @@ var typed = '';
 // 必要なHTML要素の取得
 var untypedfield = document.getElementById('untyped');
 var typedfield = document.getElementById('typed');
+var wrap = document.getElementById('wrap');
+var start = document.getElementById('start');
+var count = document.getElementById('count');
 // 複数のテキストを格納する配列
 var textLists = [
     'Hello World', 'This is my App', 'How are you?',
@@ -22,7 +25,7 @@ var textLists = [
 ];
 // ランダムなテキストを表示
 var createText = function () {
-    // 性タイプした文字列をクリア
+    // 正タイプした文字列をクリア
     typed = '';
     typedfield.textContent = typed;
     // 配列のインデックス数からランダムな数値を生成する
@@ -31,9 +34,15 @@ var createText = function () {
     untyped = textLists[random];
     untypedfield.textContent = untyped;
 };
-createText();
 // キー入力の判定
 var keyPress = function (e) {
+    // 誤タイプの場合
+    if (e.key !== untyped.substring(0, 1)) {
+        wrap === null || wrap === void 0 ? void 0 : wrap.classList.add('mistyped');
+        return;
+    }
+    // 正タイプの場合
+    wrap === null || wrap === void 0 ? void 0 : wrap.classList.remove('mistyped');
     typed += untyped.substring(0, 1);
     untyped = untyped.substring(1);
     typedfield.textContent = typed;
@@ -48,6 +57,28 @@ var rankCheck = function (score) { };
 // ゲームを終了
 var gameOver = function (id) { };
 // カウントダウンタイマー
-var timer = function () { };
-// キーボードのイベント処理
-document.addEventListener('keypress', keyPress);
+var timer = function () {
+    // タイマー部分のHTML要素(p要素)を取得する
+    var time = count.textContent;
+    var id = setInterval(function () {
+        // カウントダウンする
+        // time--;
+        count.textContent = time;
+        // カウントが0になったらタイマーを停止する
+        if (time <= 0) {
+            clearInterval(id);
+        }
+    }, 1000);
+};
+// ゲームスタート時の処理
+start.addEventListener('click', function () {
+    // カウントダウンタイマーを開始する
+    timer();
+    // ランダムなテキストを表示する
+    createText();
+    // 「スタート」ボタンを非表示にする
+    start.style.display = 'none';
+    // キーボードのイベント処理
+    document.addEventListener('keypress', keyPress);
+});
+untypedfield.textContent = 'スタートボタンで開始';

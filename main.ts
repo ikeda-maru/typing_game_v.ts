@@ -5,6 +5,9 @@ let typed   = '';
 // 必要なHTML要素の取得
 const untypedfield = document.getElementById('untyped');
 const typedfield   = document.getElementById('typed');
+const wrap         = document.getElementById('wrap');
+const start        = document.getElementById('start');
+const count        = document.getElementById('count');
 
 // 複数のテキストを格納する配列
 const textLists: string[] = [
@@ -26,7 +29,7 @@ const textLists: string[] = [
 // ランダムなテキストを表示
 const createText = () => {
 
-  // 性タイプした文字列をクリア
+  // 正タイプした文字列をクリア
   typed = '';
   typedfield.textContent = typed;
 
@@ -38,10 +41,17 @@ const createText = () => {
   untypedfield.textContent = untyped;
 };
 
-createText();
-
 // キー入力の判定
 const keyPress = e => {
+
+  // 誤タイプの場合
+  if (e.key !== untyped.substring(0, 1)) {
+    wrap?.classList.add('mistyped');
+    return;
+  }
+
+  // 正タイプの場合
+  wrap?.classList.remove('mistyped');
   typed  += untyped.substring(0, 1);
   untyped = untyped.substring(1);
   typedfield.textContent   = typed;
@@ -60,7 +70,39 @@ const rankCheck = score => {};
 const gameOver = id => {};
 
 // カウントダウンタイマー
-const timer = () => {};
+const timer = () => {
 
-// キーボードのイベント処理
-document.addEventListener('keypress', keyPress);
+  // タイマー部分のHTML要素(p要素)を取得する
+  let time = count.textContent;
+  let time = 6;
+
+  const id = setInterval(() => {
+
+    // カウントダウンする
+    time--;
+    count.textContent = time;
+
+    // カウントが0になったらタイマーを停止する
+    if(time <= 0) {
+      clearInterval(id);
+    }
+  }, 1000);
+};
+
+// ゲームスタート時の処理
+start.addEventListener('click', () => {
+
+  // カウントダウンタイマーを開始する
+  timer();
+
+  // ランダムなテキストを表示する
+  createText();
+
+  // 「スタート」ボタンを非表示にする
+  start.style.display = 'none';
+
+  // キーボードのイベント処理
+  document.addEventListener('keypress', keyPress);
+});
+
+untypedfield.textContent = 'スタートボタンで開始';
